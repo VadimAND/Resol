@@ -1,0 +1,93 @@
+﻿<Window x:Class="Resol.Test.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" mc:Ignorable="d"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:Resol.Test.ViewModels"
+        xmlns:infr="clr-namespace:Resol.Test.Infrastructure"
+        Title="{Binding Title}" 
+        Height="450" Width="800" 
+        ResizeMode="NoResize">
+    <Window.DataContext>
+        <vm:MainWindowsViewModel/>
+    </Window.DataContext>
+
+    <Grid>
+        <StackPanel VerticalAlignment="Center" Width="500">
+            <UniformGrid Rows="1" Width="76" Height="23">
+                <UniformGrid.Resources>
+                    <Style TargetType="{x:Type Button}">
+
+                        <Setter Property="Background" Value="DarkGray"/>
+                        <Setter Property="BorderThickness" Value="0"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type Button}">
+                                    <Border Background="{TemplateBinding Background}">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="DarkGray"/>
+                            </Trigger>
+                        </Style.Triggers>
+                        <Style.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="5"></Setter>
+                            </Style>
+                        </Style.Resources>
+                    </Style>
+                </UniformGrid.Resources>
+                <Button Style="{StaticResource {x:Type Button}}"  Content="+" Width="27" Command="{Binding CreateNewRoundButtonCommand}"/>
+                <Button Style="{StaticResource {x:Type Button}}"  Content="-" Width="27" Command="{Binding RemoveRoundButtonCommand}"/>
+            </UniformGrid>
+            <infr:DraggableListView
+                HorizontalAlignment="Center" Height="112" Width="442"
+                BorderThickness="0"
+                ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                ItemsSource="{Binding RoundButtons}">
+                <infr:DraggableListView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"/>
+                    </ItemsPanelTemplate>
+                </infr:DraggableListView.ItemsPanel>
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="{x:Type ListBoxItem}">
+                        <Setter Property="Margin" Value="2,0,2,0"></Setter>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ListBoxItem">
+                                    <ContentPresenter/>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ListView.ItemContainerStyle>
+                
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Rectangle
+                            Fill="{Binding Color}" Height="84" Width="84"
+                            RadiusX="10"
+                            RadiusY="10"
+                            >
+                            <Rectangle.InputBindings>
+                                <MouseBinding Command="{Binding SetRandomColorCommand}" MouseAction="LeftClick">
+                                </MouseBinding>
+                            </Rectangle.InputBindings>
+                        </Rectangle>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+                <ListView.InputBindings>
+                    <MouseBinding Command="{Binding StartScrollCommand}" MouseAction="LeftClick"></MouseBinding>
+                </ListView.InputBindings>
+            </infr:DraggableListView>
+        </StackPanel>
+    </Grid>
+</Window>
